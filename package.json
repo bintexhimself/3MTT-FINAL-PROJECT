@@ -1,0 +1,19 @@
+{
+  "name": "caprisone-project-wk11",
+  "version": "1.0.0",
+  "description": "3mtt final project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "binutiri habib",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mongodb": "6.11",
+    "mongoose": "^8.8.3",
+    "nodemon": "^3.1.7"
+  }
+}

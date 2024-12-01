@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Master</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <nav class="header">
+        <div><h1><a class="link" href="/">Task Master</a></h1></div>
+        <div>
+            <button><a href="/login">Login</a></button>
+            <button><a href="/signup">Sign up</a></button>
+        </div>
+
+    </nav>
+    <div class="main">
+        <form class="login" action="/signup" method="POST">
+            <h2>Create Account</h2><br><br>
+            <input name="email" id='email' type="email"  placeholder="Enter your email" required></input><br><br>
+            <input name="username" id="username" type="text" placeholder="Enter Username" required></input><br><br>
+            <input name="Password" id='password' type="password" placeholder="Enter password" required></input><br><br>
+            <button type="submit">Register</button><br>
+            <p>Click <a href="/login">here</a> to login</p>
+        </form>
+    </div>
+    
+</body>
+</html>
