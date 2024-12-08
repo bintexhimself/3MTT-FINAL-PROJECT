@@ -139,6 +139,22 @@ app.post('/add', async (req, res) => {
   }
 });
 
+app.post('/delete/:id', async (req, res) => {
+  try {
+    const id = req.params.id; // Get the ID from the URL and save it as a variable
+    console.log(`Deleting item with ID: ${id}`); // Optional: Log the ID for debugging
+
+    const deletedItem = await Task.findByIdAndDelete(id); // Use the variable in the database operation
+
+    if (!deletedItem) {
+      return res.status(404).json({ message: 'Item not found!' });
+    }
+
+    res.redirect('/index');
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting item', error: error.message });
+  }
+});
 
 
 
