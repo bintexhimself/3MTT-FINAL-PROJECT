@@ -1,101 +1,144 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
 const User = require('./db/user_schema');
+const Task = require('./db/taskSchema');
 
 const app = express();
 const PORT = '3000';
+const JWT_SECRET = process.env.JWT_SECRET; // Use an environment variable in production
+
 
 app.use(express.json()); //this is to accept data in json format
 app.use(express.urlencoded({extended: true})); // ths is to decode data sent from html form 
 app.use(express.static('public'));
+app.use(cookieParser());
 
 //set the view engine to EJS
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
 // DATABASE CONNECTION
+const uri = process.env.DB_CONNECTION;
 
+// Function to connect to mongodb
+const connectWithRetry = ()=>{
+  console.log("Mongodb connection with retry");
+  mongoose.connect(uri, { family: 4})
+  .then(()=>{
+    console.log('Mongodb is connected');
+  })
+  .catch(err =>{
+    console.log('Mongodb connection unsuccessful, retry after 5 seconds', err);
+    setTimeout(connectWithRetry, 5000);
+  });
+};
+connectWithRetry();
 
-
-const uri = "mongodb+srv://binutiri:bibetos1234@cluster0.a9rq7.mongodb.net/taskdb?retryWrites=true&w=majority";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-    family: 4,
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
-
-// API ROUTES
-
+// API Routte to display login page
 app.get('/', (req, res)=>{
     res.render(__dirname + '/views/login.ejs');
 });
-
-app.get('/login', (req, res)=>{
-    res.render(__dirname + '/views/login.ejs');
+// Route to Render Tasks from mongodb
+app.get('/index', async (req, res)=>{
+  try {
+    const tasks = await Task.find();  // Fetch tasks from the database
+    res.render('index.ejs', { tasks });   // Pass tasks to the EJS template
+  } catch (error) {
+    console.error('Error retrieving tasks:', error);
+    res.status(500).send('Error retrieving tasks.');
+  }
 });
 
 app.get('/signup', (req, res)=>{
     res.render(__dirname + '/views/signup.ejs');
 });
 
-app.get('/addtask', (req, res)=>{
-  res.render(__dirname + '/views/index.ejs');
+
+app.get('/add', (req, res)=>{
+  res.render(__dirname + '/views/add.ejs');
 });
 
+
+//Register new user
 app.post('/signup', async (req, res)=>{
-    try{
-        const newUser = new User({
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password
-        })
-        await newUser.save();
-        res.redirect("/");
-    }catch(err) {
-        console.log(err.message);
-        res.status(500).json({message: err.mesage});
-    }
+  try{
+      const data = { 
+        email: req.body.email, 
+        username: req.body.username,
+        password: req.body.password 
+      } 
+      const email = data.email;
+      const existingUser = await User.findOne({ email });
+      if (existingUser) return res.status(400).json({ message: 'Email already in use' });
+
+      const saltRound = 10;
+      const hashedPassword = await bcrypt.hash(data.password, saltRound);
+      data.password = hashedPassword;
+      const user = new User(data);
+      await user.save();
+      console.log(user);      
+      
+      // res.status(201).send({message: "User registered successfully"});
+      res.redirect('/');
+
+
+  }catch(error) {
+      res.status(400).send({error: error.message});
+  }
 })
-// Handle form submission
-// app.post('/signup/register', async (req, res) => {
-//     try {
-//       const { email, username, password } = req.body;
-  
-//       // Create a new user instance
-//       const newUser = new User({
-//         email,
-//         username,
-//         password, // Password will be hashed if you're using bcrypt
-//       });
-  
-//       // Save user to the database
-//       await newUser.save();
-//       res.send('User registered successfully!');
-//     } catch (error) {
-//       console.error('Error saving user:', error.message);
-//       res.status(500).send('Error registering user.');
-//     }
+
+
+// Login Route
+
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.status(401).json({ message: 'Invalid credentials' });
+    // res.json({ message: 'Login successful' });
+    res.redirect('/index');
+  } catch (error) {
+    res.status(500).json({ message: 'Error logging in', error });
+  }
+});
+
+// Protected Route Example
+// app.get('/index', (req, res) => {
+//   const token = req.cookies.token;
+//   if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+//   jwt.verify(token, JWT_SECRET, (err, user) => {
+//     if (err) return res.status(403).json({ message: 'Invalid token' });
+//     res.json({ message: 'Welcome to your dashboard!', user });
 //   });
+// });
+
+
+//Add new task to mongodb
+app.post('/add', async (req, res) => {
+  try {
+    const { title, description, priority, deadline } = req.body;
+    const newTask = new Task({
+      title,
+      description,
+      priority,
+      deadline,
+    });
+    await newTask.save();
+    res.redirect('/index');
+  } catch (error) {
+    console.error('Error adding task:', error);
+    res.status(500).send('Error adding task.');
+  }
+});
+
 
 
 

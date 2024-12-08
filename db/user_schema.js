@@ -1,23 +1,23 @@
 const mongoose = require('mongoose');
+// const bcrypt = require('bcryptjs');
 
 // Define the User schema
 const userSchema = mongoose.Schema({
   username: {
-    type: String,
-
+    type: String
   },
   email: {
-    type: String,
-    required: [true, 'Email is required'],
+    type: String
   },
   password: {
-    type: String,
-    
-    
-  },
+    type: String
+  }
 }, {
   timestamps: true, // Automatically add createdAt and updatedAt fields
 });
+
+
+
 
 // Create the User model
 const User = mongoose.model('User', userSchema);

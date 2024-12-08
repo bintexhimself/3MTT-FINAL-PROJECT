@@ -24,7 +24,7 @@ body {
     color: #ffffff;
 }
 
-button {
+.btn {
     height: 30px;
     width: 70px;
     background-color: #f9f9f9;
@@ -32,77 +32,67 @@ button {
     border: 0.5px solid black;
 }
 
-button a {
+.header button a {
     text-decoration: none;
     color: black;
 }
-.container { 
-background-color: #f9f9f9;
-border: 1px solid red;
 
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
 }
-label{
-    text-align: start;
-    font-weight: 500;
-    font-size: 20px;
-}
-
-input{
-    width: 350px;
-    height: 30px;
-    border-radius: 5px;
-    border-color: black;
-}
-
-::placeholder{
-    padding-left: 12px;
-}
-
-h1{
-text-align: center;
-padding: 10px 10px 10px;
-}
-
-.form {
-    margin: 0px auto;
-    padding: 50px 30px;
-    box-shadow: 3px 3px 3px 3px grey;
-    border-radius: 5px;
-    width: 400px;
-    height: 380px;
-}
-.title {
-    padding:15px 0 ;
-}
-
-textarea {
-    width: 350px;
-    height: 70px;
-    padding-top: 12px;
-    font-size: 15px;
-}
-
-
-.Priority {
-    padding-top: 10px;
-}
-
-select{
-    width: 300px;
-    height: 30px;
-}
-
-Select option{
-    padding: 50px 30px;
-}
-
-.submit {
-    width: 80%;
-    height: 40px;
+.container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  h1 {
     text-align: center;
+    color: #444;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  textarea,
+  select,
+  input[type="date"] {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .btn-submit {
+    background-color: #8294b8;
     color: white;
-    background-color: black;
-    border-radius: 5px;
-    
-
-}
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  textarea {
+    resize: none;
+  }

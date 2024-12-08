@@ -10,8 +10,7 @@
     <div class="header">
         <div><h1><a class="link" href="/">Task Master</a></h1></div>
         <div>
-            <button><a href="/login">Login</a></button>
-            <button><a href="/signup">Sign up</a></button>
+            <button><a href="/">logout</a></button>
         </div>
 
     </div>
@@ -22,34 +21,33 @@
                 <input type="search" name="search">
                 <button>Search</button>
             </form><br><hr><br>
-            <h3>List of all task</h3>
+            <button class="add-task-btn"><a href="/add">Add task</a></button><br><br>
+            <h3>List of all available task </h3>
             <br>
-            <div>
-                <div id="items">
-                    <div id="task"><h3>Walking with the President</h3><br>
-                        <p cllass="description">I have a meeting with the president around 5pm at the st. patrick villa</p><br>
-                        <p>Piority:<span>High</span></p>
-                    </div>
-
-                    <div class="item-btn">
-                        <button>Edit</button>
-                        <img src="/delete2.png">  
-                    </div>
-                </div>
-            </div> 
-            <div>
-                <div id="items">
-                    <div id="task"><h3>Walking with the President</h3><br>
-                        <p cllass="description">I have a meeting with the president around 5pm at the st. patrick villa</p><br>
-                        <p>Piority:<span>High</span></p>
-                    </div>
-
-                    <div class="item-btn">
-                        <button>Edit</button>
-                        <button>Delete</button> 
-                    </div>
-                </div>
-            </div>
+            <!-- Display Tasks -->
+            <% if (tasks.length > 0) { %>
+            <ul>
+              <% tasks.forEach(task => { %>
+                <li id="items">
+                  <div class="task-info">  
+                    <h3 id="task"><%= task.title %></h3><br>
+                    <p><strong>Description:</strong> <%= task.description %></p><br>
+                    <p><strong>Priority:</strong> <%= task.priority %></p><br>
+                    <p><strong>Deadline:</strong> <%= task.deadline.toDateString() %></p>
+                  </div>
+                
+                  <!-- Form to Delete Task -->
+                  <div>
+                    <form action="/delete/<%= task._id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="item-btn">Delete</button>
+                    </form>
+                  </div>
+                </li>
+              <% }); %>
+            </ul>
+            <% } else { %>
+                <p>No tasks available. Add a new task!</p>
+            <% } %>
         </div>
     </div>
     
