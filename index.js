@@ -14,12 +14,12 @@ const JWT_SECRET = process.env.JWT_SECRET; // Use an environment variable in pro
 
 app.use(express.json()); //this is to accept data in json format
 app.use(express.urlencoded({extended: true})); // ths is to decode data sent from html form 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 //set the view engine to EJS
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 
 // DATABASE CONNECTION
 const uri = process.env.DB_CONNECTION;
