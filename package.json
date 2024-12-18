@@ -2,13 +2,13 @@
   "name": "caprisone-project-wk11",
   "version": "1.0.0",
   "description": "3mtt final project",
-  "main": "index.js",
+  "main": "server.js",
   "engines": {
     "nodde": "14.x"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
   "author": "binutiri habib",
   "license": "ISC",
