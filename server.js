@@ -46,8 +46,9 @@ app.get('/', (req, res)=>{
 // Route to Render Tasks from mongodb
 app.get('/index', async (req, res)=>{
   try {
+    
     const tasks = await Task.find();  // Fetch tasks from the database
-    res.render('index.ejs', { tasks });   // Pass tasks to the EJS template
+    res.render('index.ejs', { tasks});   // Pass tasks to the EJS template
   } catch (error) {
     console.error('Error retrieving tasks:', error);
     res.status(500).send('Error retrieving tasks.');
@@ -158,7 +159,16 @@ app.post('/delete/:id', async (req, res) => {
 });
 
 
-
+// Fetch tasks based on search query
+app.get("/search/tasks", async (req, res) => {
+  // const query = req.query.q; Get the search query from the URL
+  try {
+    const tasks = await Task.find();
+    res.json(tasks);   // Pass tasks to the EJS template
+  } catch (error) {
+    res.status(500).send("Error fetching tasks: " + error.message);
+  }
+});
 
   
 
