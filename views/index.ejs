@@ -11,49 +11,47 @@
         <div><h1><a class="link" href="/">Task Master</a></h1></div>
         <div>
             <button><a href="/">logout</a></button>
-        </header>
-
-    </div>
-    <div class="main">
-        <div id="container">
-            <h1>Task Manager</h1><br>
-            <form id="searchForm" action="/search/tasks" method="GET">
-                <input type="text" class='search' name="search" id="searchInput">
-                <button type="submit">Search</button>
-            </form><br><hr><br>
-            <button class="add-task-btn"><a href="/add">Add task</a></button><br><br>
-            <h3>List of all available task </h3>
-            <br>
-            <!-- Display Tasks -->
-          <span id="items-container">
-            <% if (tasks.length > 0) { %>
-            <ul>
-              <% tasks.forEach(task => { %>
-                <li id="items">
-                  <div class="task-info">  
-                    <h3 id="task"><%= task.title %></h3><br>
-                    <p id="description"><strong>Description:</strong> <%= task.description %></p><br>
-                    <p><strong>Priority:</strong> <%= task.priority %></p><br>
-                    <p><strong>Deadline:</strong> <%= task.deadline.toDateString() %></p>
-                  </div>
-                </span>
-                  <!-- Form to Delete Task -->
-                  <div>
-                    <form action="/delete/<%= task._id %>" method="POST" style="display:inline;">
-                        <button type="submit" class="item-btn">Delete</button>
-                    </form>
-                  </div>
-                </li>
-              <% }); %>
-            </ul>
-            <% } else { %>
-                <p>No tasks available. Add a new task!</p>
-            <% } %>
         </div>
-    </div>
-    <footer class="footer">
-      <p>&copy; Designed by bintexhimself 2024 </p>
-      </footer>
-    <script src="index.js"></script>
+
+    </header>    
+    <main id="container">
+      <section>
+        <h1>Task Manager</h1><br>
+        <form id="searchForm" action="/search/tasks" method="GET">
+            <input type="text" class='search' name="search" id="searchInput">
+            <button type="submit">Search</button>
+        </form><br><hr><br>
+        <button class="add-task-btn"><a href="/add">Add task</a></button><br><br>
+        <h3>List of all available task </h3>
+        <br>
+      </section>
+        <!-- Display Tasks -->
+        <% if (tasks.length > 0) { %>
+        <ul id="items-container">
+          <% tasks.forEach(task => { %>
+            <li id="items">
+              <div class="task-info">  
+                <h3 id="task"><%= task.title %></h3><br>
+                <p id="description"><strong>Description:</strong> <%= task.description %></p><br>
+                <p><strong>Priority:</strong> <%= task.priority %></p><br>
+                <p><strong>Deadline:</strong> <%= task.deadline.toDateString() %></p>
+              </div>
+            
+              <!-- Form to Delete Task -->
+              <div>
+                <form action="/delete/<%= task._id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="item-btn">Delete</button>
+                </form>
+              </div>
+            </li>
+          <% }); %>
+        </ul>
+        <% } else { %>
+            <p>No tasks available. Add a new task!</p>
+        <% } %>
+      </main>
+       
+      <script type="text/javascript" src="index.js"></script>
 </body>
+
 </html>
